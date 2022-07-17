@@ -1,6 +1,12 @@
+/*
+PARA COMPILAR, RODAR O SEGUINTE COMANDO:
+
+gcc othello.c .\Libraries\libconio.a
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio2.h>
+#include "./Libraries/conio2.h"
 #include <conio.h>
 #include <time.h>
 #include <windows.h>
