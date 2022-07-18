@@ -782,7 +782,7 @@ int botMelhorPosicao(char tabuleiro[TAM][TAM], char jogador, POSICAO jogadasPoss
 
 }
 
-int minimax(char tabuleiro[TAM][TAM], char jogador, int profundeza, int max_prof){
+int minimax(char tabuleiro[TAM][TAM], char jogador, int profundeza, int max_prof, int alfa, int beta){
 
     int i, possiveis, aval, maxAval = -10000, minAval = 10000, melhorJogada;
     char copia[TAM][TAM];
@@ -804,17 +804,29 @@ int minimax(char tabuleiro[TAM][TAM], char jogador, int profundeza, int max_prof
         for (i = 0; i < possiveis; i++){
             copiaTabuleiro(tabuleiro, copia);
             simularJogada(copia, jogador, jogadasPossiveis, i);
-            aval = minimax(copia, oponente(jogador), profundeza - 1, max_prof);
+            aval = minimax(copia, oponente(jogador), profundeza - 1, max_prof, alfa, beta);
             if (jogador == 'B'){ //max
                 if (aval > maxAval){
                     maxAval = aval;
                     melhorJogada = i;
+                    if (aval > alfa) {
+                        alfa = aval;
+                    }
+                    if (beta <= alfa) {
+                        break;
+                    }
                 }
             }
             else{ //min
                 if (aval < minAval){
                     minAval = aval;
                     melhorJogada = i;
+                    if (aval < beta) {
+                        beta = aval;
+                    }
+                    if (beta <= alfa) {
+                        break;
+                    }
                 }
             }
         }
@@ -824,9 +836,9 @@ int minimax(char tabuleiro[TAM][TAM], char jogador, int profundeza, int max_prof
         }
         else{
             if (jogador == 'B')
-            return maxAval;
-        else
-            return minAval;
+                return maxAval;
+            else
+                return minAval;
         }
 
     }
@@ -851,18 +863,18 @@ int jogadaDeQuem(int tipoJogador, char tabuleiro[TAM][TAM], char jogador, POSICA
             selecao = botMaisCapturas(tabuleiro, jogador, jogadasPossiveis, possiveis);
             break;
         case 3:
-            selecao = minimax(tabuleiro, jogador, 1, 1);
+            selecao = minimax(tabuleiro, jogador, 1, 1, -10000, 10000);
             break;
         case 4:
-            selecao = minimax(tabuleiro, jogador, 3, 3);
+            selecao = minimax(tabuleiro, jogador, 3, 3, -10000, 10000);
             break;
         case 5:
-            selecao = minimax(tabuleiro, jogador, 5, 5);
+            selecao = minimax(tabuleiro, jogador, 5, 5, -10000, 10000);
             break;
         case 6:
             gotoxy(1, 23);
             printf("Bot esta pensando...");
-            selecao = minimax(tabuleiro, jogador, 7, 7);
+            selecao = minimax(tabuleiro, jogador, 7, 7, -10000, 10000);
             gotoxy(1, 23);
             printf("                    ");
             break;
